@@ -7,7 +7,7 @@ A web application built using Django to track job applications and manage job se
  📌 Features
 
 * Add job applications
-* Update job status (Applied, Interview, Selected, Rejected)
+* Update job status (Total, Applied, Interview, Rejected)
 * Dashboard to view all jobs
 * Django admin panel
 
