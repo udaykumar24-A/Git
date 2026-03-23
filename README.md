@@ -58,8 +58,6 @@ A web application built using Django to track job applications and manage job se
 ➕ Add Job
 ![Add Job](screenshots/add-job.png)
 
-(Add screenshots here later)
-
 ---
 
  📁 Project Structure
