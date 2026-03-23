@@ -1,0 +1,94 @@
+{% extends "base.html" %} {% load static %} {% block title %}Dashboard · Job
+Tracker{% endblock %} {% block extra_head %}
+<script src="{% static 'tracker/dashboard.js' %}" defer></script>
+{% endblock %} {% block content %}
+<div class="page-title">
+  <div>
+    <h1>Your job applications</h1>
+    <p class="muted">
+      Track where you’ve applied and how each application is progressing.
+    </p>
+  </div>
+  <div>
+    <a href="{% url 'tracker:add_application' %}" class="btn btn-primary"
+      >+ Add application</a
+    >
+  </div>
+</div>
+
+<div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem">
+  <div class="field" style="flex: 2 1 200px; margin-bottom: 0">
+    <label for="search">Search</label>
+    <input
+      id="search"
+      type="text"
+      placeholder="Filter by company or position"
+      data-js="search-input"
+    />
+  </div>
+  <div class="field" style="flex: 1 1 160px; margin-bottom: 0">
+    <label for="status">Status</label>
+    <select id="status" data-js="status-filter">
+      <option value="">All</option>
+      <option value="applied">Applied</option>
+      <option value="interview">Interview</option>
+      <option value="rejected">Rejected</option>
+    </select>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-label">Total</div>
+    <div class="stat-value">{{ applications|length }}</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Applied</div>
+    <div class="stat-value">{{ status_counts.applied|default:0 }}</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Interview</div>
+    <div class="stat-value">{{ status_counts.interview|default:0 }}</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Rejected</div>
+    <div class="stat-value">{{ status_counts.rejected|default:0 }}</div>
+  </div>
+</div>
+
+{% if applications %}
+<table data-js="applications-table">
+  <thead>
+    <tr>
+      <th>Company</th>
+      <th>Position</th>
+      <th>Status</th>
+      <th>Applied</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for app in applications %}
+    <tr
+      data-company="{{ app.company_name }}"
+      data-position="{{ app.position|default_if_none:'' }}"
+      data-status="{{ app.status }}"
+    >
+      <td>{{ app.company_name }}</td>
+      <td>{{ app.position|default:"—" }}</td>
+      <td>
+        {% with key=app.status %}
+        <span class="status-pill status-{{ key }}">
+          {{ app.get_status_display }}
+        </span>
+        {% endwith %}
+      </td>
+      <td>{{ app.applied_date }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">
+  No applications yet. Start by adding your first job application.
+</p>
+{% endif %} {% endblock %}
